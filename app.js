@@ -1,6 +1,8 @@
 // Get dependencies
+require('dotenv').config();
 const express = require('express');
 const logger = require('./logger');
+const { NotFoundException } = require("./errors");
 const errorHandler = require('./error-handler');
 const peopleConnector = require('./people-connector');
 const app = express();
@@ -10,33 +12,43 @@ app.use(express.json());                         // support JSON-encoded bodies
 app.use(express.urlencoded({ extended: true })); // support URL-encoded bodies
 app.use(logger.logger);
 
-app.post('/people', (req, res) => {
-  res.send(peopleConnector.createPerson(req.body));
+app.post('/people', async (req, res) => {
+  res.send(await peopleConnector.createPerson(req.body));
 });
 
-app.delete('/people/:id', (req, res) => {
-  res.send(peopleConnector.deletePerson(req.params.id));
+app.delete('/people/:id', async (req, res) => {
+  res.send(await peopleConnector.deletePerson(req.params.id));
 });
 
-app.get('/people', (req, res) => {
+app.get('/people', async (req, res) => {
   const searchTerm = req.query.search;
-  res.send(peopleConnector.getPeople(searchTerm));
+  res.send(await peopleConnector.getPeople(searchTerm));
 });
 
-app.get('/people/:id', (req, res) => {
-  res.send(peopleConnector.getPerson(req.params.id));
+app.get('/people/:id', async (req, res, next) => {
+  try {
+    const person = await peopleConnector.getPerson(req.params.id);
+    if (!person) {
+      throw new NotFoundException('Person not found');
+    }
+    res.send(person);
+  } catch(e) {
+    next(e);
+  }
 });
 
-app.put('/people/:id', (req, res) => {
-  res.send(peopleConnector.updatePerson(req.params.id, req.body));
+app.put('/people/:id', async (req, res) => {
+  res.send(await peopleConnector.updatePerson(req.params.id, req.body));
 });
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   res.send("Please navigate to a valid operation");
 });
 
+app.use(logger.logger);
 app.use(errorHandler.handler);
 
-app.listen(port, () => {
+app.listen(port, async () => {
+  await peopleConnector.establishConnection();
   console.log(`Example app listening at http://localhost:${port}`);
 });

@@ -1,40 +1,46 @@
-const { NotFoundException } = require("./errors");
+const { ObjectID } = require('mongodb')
+const { Connection } = require('./mongo-connection');
+const { BadRequestException } = require("./errors");
+let people;
 
-const people = [
-    { id: 1, firstName: 'Simon', lastName: 'Thomas', age: 41 },
-    { id: 2, firstName: 'Warren', lastName: 'Jones', age: 38 },
-];
+const establishConnection = async () => {
+    const client = await Connection.connectToMongo();
+    people = client.db('training-simon').collection('people');
+}
 
-const createPerson = (person) => {
-    const id = people
-        .map(person => person.id)
-        .reduce((max, cur) => Math.max(max, cur), 0) + 1;
-    people.push({ ...person, id });
+const createPerson = async (person) => {
+    const result = await people.insertOne({ ...person });
     return "Creation successful";
 }
 
-const deletePerson = (id) => {
-    const index = people.findIndex(p => p.id == id);
-    people = people.splice(index, 1);
+const deletePerson = async (id) => {
+    const result = await people.deleteOne({ "_id": getMongoDbId(id) });
     return "Deletion successful";
 }
 
-const getPeople = (searchTerm) => {
-    let criteria = p => !searchTerm || p.firstName === searchTerm || p.lastName === searchTerm; 
-    return people.filter(criteria);
-}
-
-const getPerson = (id) => {
-    const person = people.find(p => p.id == id);
-    if (!person) {
-        throw new NotFoundException('Person not found');
+const getPeople = async (searchTerm) => {
+    let criteria = {}; 
+    if (searchTerm) {
+        criteria = { $or: [{ 'firstName': searchTerm }, { 'lastName': searchTerm }] };
     }
+    return await people.find(criteria).toArray();
 }
 
-const updatePerson = (id, person) => {
-    const index = people.findIndex(p => p.id == id);
-    people[index] = { ...person, id };
+const getPerson = async (id) => {
+    return await people.findOne({ "_id": getMongoDbId(id)});
+}
+
+const updatePerson = async (id, person) => {
+    const { _id, ...newPerson } = person; 
+    const result = await people.replaceOne({ "_id": getMongoDbId(id)}, newPerson );
     return "Update successful";
 }
 
-module.exports = { createPerson, deletePerson, getPeople, getPerson, updatePerson };
+const getMongoDbId = (id) => {
+    try {
+        return new ObjectID(id);
+    } catch (e) {
+        throw new BadRequestException('Invalid ID supplied', e)
+    }
+}
+module.exports = { createPerson, establishConnection, deletePerson, getPeople, getPerson, updatePerson };

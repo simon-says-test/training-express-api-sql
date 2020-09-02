@@ -14,4 +14,12 @@ class NotFoundException extends CustomException {
   }
 }  
 
-module.exports = { CustomException, NotFoundException };
+class BadRequestException extends CustomException {
+  constructor(message, metadata) {
+    super(message, metadata);
+    this.metadata = metadata;
+    this.code = 400;
+  }
+}  
+
+module.exports = { CustomException, NotFoundException, BadRequestException };
