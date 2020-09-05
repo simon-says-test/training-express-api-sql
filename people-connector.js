@@ -9,8 +9,8 @@ const establishConnection = async () => {
 }
 
 const createPerson = async (person) => {
-    const result = await people.insertOne({ ...person });
-    return "Creation successful";
+    const result = await people.insertOne(person);
+    return result.ops[0];
 }
 
 const deletePerson = async (id) => {

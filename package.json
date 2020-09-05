@@ -4,8 +4,8 @@
   "description": "A simple API for training purposes",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./app.js",
-    "start:prod": "nodemon ./app.js",
+    "start": "nodemon ./start.js",
+    "start:prod": "nodemon ./start.js",
     "test": "jest"
   },
   "author": "Simon Thomas",
@@ -19,6 +19,7 @@
   "devDependencies": {
     "jest": "^26.4.2",
     "nodemon": "^2.0.4",
-    "request-promise-native": "^1.0.9"
+    "request-promise-native": "^1.0.9",
+    "supertest": "^4.0.2"
   }
 }

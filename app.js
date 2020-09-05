@@ -6,14 +6,16 @@ const { NotFoundException } = require("./errors");
 const errorHandler = require('./error-handler');
 const peopleConnector = require('./people-connector');
 const app = express();
-const port = 3000;
 
 app.use(express.json());                         // support JSON-encoded bodies
 app.use(express.urlencoded({ extended: true })); // support URL-encoded bodies
 app.use(logger.logger);
 
 app.post('/people', async (req, res) => {
-  res.send(await peopleConnector.createPerson(req.body));
+  const result = await peopleConnector.createPerson(req.body);
+  res.setHeader('Location', `/${result._id}`);
+  res.status(201);
+  res.send(result);
 });
 
 app.delete('/people/:id', async (req, res) => {
@@ -48,7 +50,8 @@ app.get('/', async (req, res) => {
 app.use(logger.logger);
 app.use(errorHandler.handler);
 
-app.listen(port, async () => {
+const connectToDataSources = async() => {
   await peopleConnector.establishConnection();
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+}
+
+module.exports = { app, connectToDataSources };
