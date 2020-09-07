@@ -19,12 +19,16 @@ app.post('/people', async (req, res) => {
 });
 
 app.delete('/people/:id', async (req, res) => {
-  res.send(await peopleConnector.deletePerson(req.params.id));
+  const result = await peopleConnector.deletePerson(req.params.id);
+  res.status(200);
+  res.send(result);
 });
 
 app.get('/people', async (req, res) => {
   const searchTerm = req.query.search;
-  res.send(await peopleConnector.getPeople(searchTerm));
+  const result = await peopleConnector.getPeople(searchTerm);
+  res.status(200);
+  res.send(result);
 });
 
 app.get('/people/:id', async (req, res, next) => {

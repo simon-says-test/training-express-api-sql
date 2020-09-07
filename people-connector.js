@@ -15,7 +15,7 @@ const createPerson = async (person) => {
 
 const deletePerson = async (id) => {
     const result = await people.deleteOne({ "_id": getMongoDbId(id) });
-    return "Deletion successful";
+    return { deletedCount: result.deletedCount };
 }
 
 const getPeople = async (searchTerm) => {
