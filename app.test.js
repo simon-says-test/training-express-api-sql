@@ -2,12 +2,16 @@ require('dotenv').config();
 const request = require('supertest');
 const { app, connectToDataSources } = require('./app');
 const { Connection } = require('./mongo-connection');
-let client, people;
+let client, recipes;
 
-const baseUrl = "http://localhost:3000/people";
+const baseUrl = "http://localhost:3000/recipes";
 const seed = [
-  { firstName: "Bob", lastName: "Bobbs", age: 39 },
-  { firstName: "Tee", lastName: "Bone", age: 45 }
+  { title: "Banoffee Pie", 
+    shortDescription: "An English dessert pie made from bananas, cream and caramel.", 
+    preparationTime: 25 },
+  { title: "Pizza Marghrita", 
+  shortDescription: "Pizza Margherita is a typical Neapolitan pizza, made with tomatoes, mozzarella cheese, fresh basil and olive oil.", 
+  preparationTime: 30 }
 ];
 
 const establishConnection = async (collection) => {
@@ -15,25 +19,27 @@ const establishConnection = async (collection) => {
   return client.db('training-simon').collection(collection);
 }
 
-const resetDb = async (people) => {
-  await people.deleteMany({});
-  await people.insertMany(seed);
+const resetDb = async (recipes) => {
+  await recipes.deleteMany({});
+  await recipes.insertMany(seed);
 };
 
-describe("POST to /people", () => {
+describe("POST to /recipes", () => {
   beforeAll(async () => {
     await connectToDataSources();
-    people = await establishConnection('people');
+    recipes = await establishConnection('recipes');
   })
   
   beforeEach(async function() {
-    await resetDb(people);
+    await resetDb(recipes);
   });
 
-  test("A valid person results is saved and can be retrieved", async () => {
-    const data = { firstName: "Simon", lastName: "Thomas", age: 39 };
+  test("A valid recipe results is saved and can be retrieved", async () => {
+    const data = { title: "Beans on toast", 
+    shortDescription: "Traditional English fare, much beloved of children, students and the lazy.", 
+    preparationTime: 5 };
     const postResponse = await request(app)
-      .post('/people')
+      .post('/recipes')
       .send(data)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
@@ -44,7 +50,7 @@ describe("POST to /people", () => {
       expect(_id.length).toBe(24);
 
       const getResponse = await request(app)
-        .get(`/people/${_id}`)
+        .get(`/recipes/${_id}`)
         .send()
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/);
@@ -56,7 +62,7 @@ describe("POST to /people", () => {
   test("Results can retrieved and the first one deleted", async () => {
     
     const getResponse = await request(app)
-      .get(`/people`)
+      .get(`/recipes`)
       .send()
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
@@ -67,7 +73,7 @@ describe("POST to /people", () => {
     });
 
     const deleteResponse = await request(app)
-      .delete(`/people/${getResponse.body[0]._id}`)
+      .delete(`/recipes/${getResponse.body[0]._id}`)
       .send()
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
@@ -77,7 +83,7 @@ describe("POST to /people", () => {
   });
 
   afterAll(async () => {
-    people = null;
+    recipes = null;
     await client.close();
   })
 });  

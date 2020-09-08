@@ -1,38 +1,38 @@
 const { ObjectID } = require('mongodb')
 const { Connection } = require('./mongo-connection');
 const { BadRequestException } = require("./errors");
-let people;
+let recipes;
 
 const establishConnection = async () => {
     const client = await Connection.connectToMongo();
-    people = client.db('training-simon').collection('people');
+    recipes = client.db('training-simon').collection('recipes');
 }
 
-const createPerson = async (person) => {
-    const result = await people.insertOne(person);
+const createPerson = async (recipe) => {
+    const result = await recipes.insertOne(recipe);
     return result.ops[0];
 }
 
 const deletePerson = async (id) => {
-    const result = await people.deleteOne({ "_id": getMongoDbId(id) });
+    const result = await recipes.deleteOne({ "_id": getMongoDbId(id) });
     return { deletedCount: result.deletedCount };
 }
 
 const getPeople = async (searchTerm) => {
     let criteria = {}; 
     if (searchTerm) {
-        criteria = { $or: [{ 'firstName': searchTerm }, { 'lastName': searchTerm }] };
+        criteria = { $or: [{ 'title': searchTerm }, { 'shortDescription': searchTerm }] };
     }
-    return await people.find(criteria).toArray();
+    return await recipes.find(criteria).toArray();
 }
 
 const getPerson = async (id) => {
-    return await people.findOne({ "_id": getMongoDbId(id)});
+    return await recipes.findOne({ "_id": getMongoDbId(id)});
 }
 
-const updatePerson = async (id, person) => {
-    const { _id, ...newPerson } = person; 
-    const result = await people.replaceOne({ "_id": getMongoDbId(id)}, newPerson );
+const updatePerson = async (id, recipe) => {
+    const { _id, ...newPerson } = recipe; 
+    const result = await recipes.replaceOne({ "_id": getMongoDbId(id)}, newPerson );
     return "Update successful";
 }
 
