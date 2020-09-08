@@ -8,17 +8,17 @@ const establishConnection = async () => {
     recipes = client.db('training-simon').collection('recipes');
 }
 
-const createPerson = async (recipe) => {
+const createRecipe = async (recipe) => {
     const result = await recipes.insertOne(recipe);
     return result.ops[0];
 }
 
-const deletePerson = async (id) => {
+const deleteRecipe = async (id) => {
     const result = await recipes.deleteOne({ "_id": getMongoDbId(id) });
     return { deletedCount: result.deletedCount };
 }
 
-const getPeople = async (searchTerm) => {
+const getRecipes = async (searchTerm) => {
     let criteria = {}; 
     if (searchTerm) {
         criteria = { $or: [{ 'title': searchTerm }, { 'shortDescription': searchTerm }] };
@@ -26,13 +26,13 @@ const getPeople = async (searchTerm) => {
     return await recipes.find(criteria).toArray();
 }
 
-const getPerson = async (id) => {
+const getRecipe = async (id) => {
     return await recipes.findOne({ "_id": getMongoDbId(id)});
 }
 
-const updatePerson = async (id, recipe) => {
-    const { _id, ...newPerson } = recipe; 
-    const result = await recipes.replaceOne({ "_id": getMongoDbId(id)}, newPerson );
+const updateRecipe = async (id, recipe) => {
+    const { _id, ...newRecipe } = recipe; 
+    const result = await recipes.replaceOne({ "_id": getMongoDbId(id)}, newRecipe );
     return "Update successful";
 }
 
@@ -43,4 +43,4 @@ const getMongoDbId = (id) => {
         throw new BadRequestException('Invalid ID supplied', e)
     }
 }
-module.exports = { createPerson, establishConnection, deletePerson, getPeople, getPerson, updatePerson };
+module.exports = { createRecipe, establishConnection, deleteRecipe, getRecipes, getRecipe, updateRecipe };
