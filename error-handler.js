@@ -1,19 +1,20 @@
-const winston = require("winston");
-const { CustomException } = require("./errors");
+const winston = require('winston');
+const { CustomException } = require('./errors');
 
+// eslint-disable-next-line no-unused-vars
 const handler = (err, req, res, next) => {
   if (err instanceof CustomException) {
-    let log = `Error ${err.code}: ${err.message}`;
+    const log = `Error ${err.code}: ${err.message}`;
     winston.error(log);
     return res.status(err.code).json({
-      status: "error",
+      status: 'error',
       message: err.message,
     });
   }
 
   winston.error(`${err.message}`);
   return res.status(500).json({
-    status: "error",
+    status: 'error',
     message: `Error: ${err.message}`,
   });
 };

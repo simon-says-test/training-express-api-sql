@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 class CustomException extends Error {
   constructor(message, metadata) {
     super(message, metadata);

@@ -1,11 +1,20 @@
-const { ObjectID } = require("mongodb");
-const { Connection } = require("./mongo-connection");
-const { BadRequestException } = require("./errors");
+const { ObjectID } = require('mongodb');
+const { Connection } = require('./mongo-connection');
+const { BadRequestException } = require('./errors');
+
 let recipes;
 
 const establishConnection = async () => {
   const client = await Connection.connectToMongo();
-  recipes = client.db("training-simon").collection("recipes");
+  recipes = client.db('training-simon').collection('recipes');
+};
+
+const getMongoDbId = (id) => {
+  try {
+    return new ObjectID(id);
+  } catch (e) {
+    throw new BadRequestException('Invalid ID supplied', e);
+  }
 };
 
 const createRecipe = async (recipe) => {
@@ -25,26 +34,17 @@ const getRecipes = async (searchTerm) => {
       $or: [{ title: searchTerm }, { shortDescription: searchTerm }],
     };
   }
-  return await recipes.find(criteria).toArray();
+  return recipes.find(criteria).toArray();
 };
 
-const getRecipe = async (id) => {
-  return await recipes.findOne({ _id: getMongoDbId(id) });
-};
+const getRecipe = async (id) => recipes.findOne({ _id: getMongoDbId(id) });
 
 const updateRecipe = async (id, recipe) => {
   const { _id, ...newRecipe } = recipe;
   const result = await recipes.replaceOne({ _id: getMongoDbId(id) }, newRecipe);
-  return "Update successful";
+  return 'Update successful';
 };
 
-const getMongoDbId = (id) => {
-  try {
-    return new ObjectID(id);
-  } catch (e) {
-    throw new BadRequestException("Invalid ID supplied", e);
-  }
-};
 module.exports = {
   createRecipe,
   establishConnection,

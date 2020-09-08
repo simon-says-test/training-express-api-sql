@@ -1,57 +1,58 @@
-require("dotenv").config();
-const request = require("supertest");
-const { app, connectToDataSources } = require("./app");
-const { Connection } = require("./mongo-connection");
-let client, recipes;
+/* eslint-disable no-underscore-dangle */
+require('dotenv').config();
+const request = require('supertest');
+const { app, connectToDataSources } = require('./app');
+const { Connection } = require('./mongo-connection');
 
-const baseUrl = "http://localhost:3000/recipes";
+let client; let recipeCollection;
+
 const seed = [
   {
-    title: "Banoffee Pie",
+    title: 'Banoffee Pie',
     shortDescription:
-      "An English dessert pie made from bananas, cream and caramel.",
+      'An English dessert pie made from bananas, cream and caramel.',
     preparationTime: 25,
   },
   {
-    title: "Pizza Marghrita",
+    title: 'Pizza Margherita',
     shortDescription:
-      "Pizza Margherita is a typical Neapolitan pizza, made with tomatoes, mozzarella cheese, fresh basil and olive oil.",
+      'Pizza Margherita is a typical Neapolitan pizza, made with tomatoes, mozzarella cheese, fresh basil and olive oil.',
     preparationTime: 30,
   },
 ];
 
 const establishConnection = async (collection) => {
   client = await Connection.connectToMongo();
-  return client.db("training-simon").collection(collection);
+  return client.db('training-simon').collection(collection);
 };
 
-const resetDb = async (recipes) => {
-  await recipes.deleteMany({});
-  await recipes.insertMany(seed);
+const resetDb = async () => {
+  await recipeCollection.deleteMany({});
+  await recipeCollection.insertMany(seed);
 };
 
-describe("POST to /recipes", () => {
+describe('POST to /recipes', () => {
   beforeAll(async () => {
     await connectToDataSources();
-    recipes = await establishConnection("recipes");
+    recipeCollection = await establishConnection('recipes');
   });
 
-  beforeEach(async function () {
-    await resetDb(recipes);
+  beforeEach(async () => {
+    await resetDb();
   });
 
-  test("A valid recipe results is saved and can be retrieved", async () => {
+  test('A valid recipe results is saved and can be retrieved', async () => {
     const data = {
-      title: "Beans on toast",
+      title: 'Beans on toast',
       shortDescription:
-        "Traditional English fare, much beloved of children, students and the lazy.",
+        'Traditional English fare, much beloved of children, students and the lazy.',
       preparationTime: 5,
     };
     const postResponse = await request(app)
-      .post("/recipes")
+      .post('/recipes')
       .send(data)
-      .set("Accept", "application/json")
-      .expect("Content-Type", /json/);
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/);
 
     expect(postResponse.status).toBe(201);
     const { _id, ...body } = postResponse.body;
@@ -61,37 +62,37 @@ describe("POST to /recipes", () => {
     const getResponse = await request(app)
       .get(`/recipes/${_id}`)
       .send()
-      .set("Accept", "application/json")
-      .expect("Content-Type", /json/);
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/);
 
     expect(getResponse.status).toBe(200);
     expect(getResponse.body).toEqual(postResponse.body);
   });
 
-  test("Results can retrieved and the first one deleted", async () => {
+  test('Results can retrieved and the first one deleted', async () => {
     const getResponse = await request(app)
-      .get(`/recipes`)
+      .get('/recipes')
       .send()
-      .set("Accept", "application/json")
-      .expect("Content-Type", /json/);
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/);
 
     expect(getResponse.status).toBe(200);
     getResponse.body.forEach((obj) => {
-      expect(seed.some((r) => r._id == obj._id)).toBe(true);
+      expect(seed.some((r) => r._id.toString() === obj._id.toString())).toBe(true);
     });
 
     const deleteResponse = await request(app)
       .delete(`/recipes/${getResponse.body[0]._id}`)
       .send()
-      .set("Accept", "application/json")
-      .expect("Content-Type", /json/);
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/);
 
     expect(deleteResponse.status).toBe(200);
     expect(deleteResponse.body).toEqual({ deletedCount: 1 });
   });
 
   afterAll(async () => {
-    recipes = null;
+    recipeCollection = null;
     await client.close();
   });
 });

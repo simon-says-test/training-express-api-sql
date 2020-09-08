@@ -1,28 +1,28 @@
-const winston = require("winston");
-const console = new winston.transports.Console({ level: "debug" });
+const winston = require('winston');
+
+const console = new winston.transports.Console({ level: 'debug' });
 winston.add(console);
 
 const logger = (req, res, next) => {
-  let currentDatetime = new Date();
-  let formatted_date =
-    currentDatetime.getFullYear() +
-    "-" +
-    (currentDatetime.getMonth() + 1) +
-    "-" +
-    currentDatetime.getDate() +
-    " " +
-    currentDatetime.getHours() +
-    ":" +
-    currentDatetime.getMinutes() +
-    ":" +
-    currentDatetime.getSeconds() +
-    ":" +
-    currentDatetime.getMilliseconds();
-  let method = req.method;
-  let url = req.url;
-  let status = res.statusCode;
-  let log = `[${formatted_date}] ${method}:${url} ${status} ${JSON.stringify(
-    req.body
+  const currentDatetime = new Date();
+  const formattedDate = `${currentDatetime.getFullYear()
+  }-${
+    currentDatetime.getMonth() + 1
+  }-${
+    currentDatetime.getDate()
+  } ${
+    currentDatetime.getHours()
+  }:${
+    currentDatetime.getMinutes()
+  }:${
+    currentDatetime.getSeconds()
+  }:${
+    currentDatetime.getMilliseconds()}`;
+  const { method } = req;
+  const { url } = req;
+  const status = res.statusCode;
+  const log = `[${formattedDate}] ${method}:${url} ${status} ${JSON.stringify(
+    req.body,
   )}`;
   winston.info(log);
 
