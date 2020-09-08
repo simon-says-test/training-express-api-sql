@@ -1,45 +1,44 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "NPM start",
-        "runtimeExecutable": "npm",
-        "runtimeArgs": ["run-script", "start"],
-        "console": "integratedTerminal",
-        "port": 9229,
-        "skipFiles": [
-          "${workspaceFolder}/node_modules/**/*.js",
-          "<node_internals>/**/*.js",
-          "**/async_hooks.js"
-        ]
-      },
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "NPM test",
-        "runtimeExecutable": "npm",
-        "runtimeArgs": ["run-script", "test"],
-        "skipFiles": [
-          "${workspaceFolder}/node_modules/**/*.js",
-          "<node_internals>/**/*.js",
-          "**/async_hooks.js"
-        ]
-      },
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Debug tests",
-        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
-        "args": ["--runInBand", "./src"],
-        "console": "integratedTerminal",
-        "internalConsoleOptions": "neverOpen",
-        "disableOptimisticBPs": true,
-        "windows": {
-          "program": "${workspaceFolder}/node_modules/jest/bin/jest"
-        }
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "NPM start",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run-script", "start"],
+      "console": "integratedTerminal",
+      "port": 9229,
+      "skipFiles": [
+        "${workspaceFolder}/node_modules/**/*.js",
+        "<node_internals>/**/*.js",
+        "**/async_hooks.js"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "NPM test",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run-script", "test"],
+      "skipFiles": [
+        "${workspaceFolder}/node_modules/**/*.js",
+        "<node_internals>/**/*.js",
+        "**/async_hooks.js"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug tests",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      "args": ["--runInBand", "./src"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
       }
-    ]
-  }
-  
+    }
+  ]
+}

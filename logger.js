@@ -1,5 +1,5 @@
-const winston = require('winston');
-const console = new winston.transports.Console({ level: 'debug' });
+const winston = require("winston");
+const console = new winston.transports.Console({ level: "debug" });
 winston.add(console);
 
 const logger = (req, res, next) => {
@@ -21,7 +21,9 @@ const logger = (req, res, next) => {
   let method = req.method;
   let url = req.url;
   let status = res.statusCode;
-  let log = `[${formatted_date}] ${method}:${url} ${status} ${JSON.stringify(req.body)}`;
+  let log = `[${formatted_date}] ${method}:${url} ${status} ${JSON.stringify(
+    req.body
+  )}`;
   winston.info(log);
 
   next();

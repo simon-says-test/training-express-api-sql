@@ -1,4 +1,4 @@
-const { app, connectToDataSources } = require('./app');
+const { app, connectToDataSources } = require("./app");
 
 const port = 3000;
 app.listen(port, async () => {
