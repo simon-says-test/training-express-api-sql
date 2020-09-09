@@ -11,7 +11,7 @@ const establishConnection = async () => {
 
 const getMongoDbId = (id) => {
   try {
-    return new ObjectID(id);
+    return ObjectID(id);
   } catch (e) {
     throw new BadRequestException('Invalid ID supplied', e);
   }
@@ -31,7 +31,10 @@ const getRecipes = async (searchTerm) => {
   let criteria = {};
   if (searchTerm) {
     criteria = {
-      $or: [{ title: searchTerm }, { shortDescription: searchTerm }],
+      $or: [
+        { title: { $regex: `.*${searchTerm}.*`, $options: 'i' } },
+        { shortDescription: { $regex: `.*${searchTerm}.*`, $options: 'i' } },
+      ],
     };
   }
   return recipes.find(criteria).toArray();
@@ -41,8 +44,8 @@ const getRecipe = async (id) => recipes.findOne({ _id: getMongoDbId(id) });
 
 const updateRecipe = async (id, recipe) => {
   const { _id, ...newRecipe } = recipe;
-  const result = await recipes.replaceOne({ _id: getMongoDbId(id) }, newRecipe);
-  return 'Update successful';
+  const result = await recipes.updateOne({ _id: getMongoDbId(id) }, { $set: newRecipe });
+  return { modifiedCount: result.modifiedCount };
 };
 
 module.exports = {
