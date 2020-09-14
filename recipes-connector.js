@@ -1,51 +1,55 @@
-const { ObjectID } = require('mongodb');
-const { Connection } = require('./mongo-connection');
+const { Connection } = require('./connection');
 const { BadRequestException } = require('./errors');
 
-let recipes;
-
-const establishConnection = async () => {
-  const client = await Connection.connectToMongo();
-  recipes = client.db('training-simon').collection('recipes');
-};
-
-const getMongoDbId = (id) => {
-  try {
-    return ObjectID(id);
-  } catch (e) {
-    throw new BadRequestException('Invalid ID supplied', e);
-  }
-};
+const establishConnection = async () => Connection.connect();
 
 const createRecipe = async (recipe) => {
-  const result = await recipes.insertOne(recipe);
-  return result.ops[0];
+  const sql = `INSERT INTO Recipes (title, shortDescription, preparationTime) 
+               VALUES ($1, $2, $3)`;
+  const values = Object.values(recipe);
+  const result = await Connection.run(sql, values);
+  return result;
 };
 
 const deleteRecipe = async (id) => {
-  const result = await recipes.deleteOne({ _id: getMongoDbId(id) });
-  return { deletedCount: result.deletedCount };
+  const sql = `DELETE FROM Recipes 
+               WHERE recipe_id = $1`;
+  const result = await Connection.run(sql, [id]);
+  return result;
 };
 
 const getRecipes = async (searchTerm) => {
-  let criteria = {};
-  if (searchTerm) {
-    criteria = {
-      $or: [
-        { title: { $regex: `.*${searchTerm}.*`, $options: 'i' } },
-        { shortDescription: { $regex: `.*${searchTerm}.*`, $options: 'i' } },
-      ],
-    };
+  if (!searchTerm) {
+    return Connection.all(`SELECT recipe_id, title, shortDescription, preparationTime 
+                           FROM Recipes`);
   }
-  return recipes.find(criteria).toArray();
+  const sql = `SELECT recipe_id, title, shortDescription, preparationTime 
+               FROM Recipes 
+               WHERE title LIKE $1
+               OR shortDescription LIKE $2`;
+  const result = await Connection.all(sql, [`%${searchTerm}%`, `%${searchTerm}%`]);
+  return result;
 };
 
-const getRecipe = async (id) => recipes.findOne({ _id: getMongoDbId(id) });
+const getRecipe = async (id) => {
+  const sql = `SELECT recipe_id, title, shortDescription, preparationTime 
+               FROM Recipes 
+               WHERE recipe_id = $1`;
+  const result = await Connection.get(sql, [id]);
+  return result;
+};
 
 const updateRecipe = async (id, recipe) => {
-  const { _id, ...newRecipe } = recipe;
-  const result = await recipes.updateOne({ _id: getMongoDbId(id) }, { $set: newRecipe });
-  return { modifiedCount: result.modifiedCount };
+  const sql = `UPDATE Recipes
+               SET title = $1, shortDescription = $2, preparationTime = $3
+               WHERE recipe_id = $4`;
+  const result = await Connection.run(sql, [
+    recipe.title,
+    recipe.shortDescription,
+    recipe.preparationTime,
+    id,
+  ]);
+  return result;
 };
 
 module.exports = {

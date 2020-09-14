@@ -1,40 +1,21 @@
 /* eslint-disable no-underscore-dangle */
 require('dotenv').config();
 const request = require('supertest');
-const { app, connectToDataSources } = require('./app');
-const { Connection } = require('./mongo-connection');
-
-let client;
-let recipeCollection;
-
-const seed = [
-  {
-    title: 'Banoffee Pie',
-    shortDescription: 'An English dessert pie made from bananas, cream and caramel.',
-    preparationTime: 25,
-  },
-  {
-    title: 'Pizza Margherita',
-    shortDescription:
-      'Pizza Margherita is a typical Neapolitan pizza, made with tomatoes, mozzarella cheese, fresh basil and olive oil.',
-    preparationTime: 30,
-  },
-];
-
-const establishConnection = async (collection) => {
-  client = await Connection.connectToMongo();
-  return client.db('training-simon').collection(collection);
-};
+const { app } = require('./app');
+const { Connection } = require('./connection');
+const RecipesConnector = require('./recipes-connector');
 
 const resetDb = async () => {
-  await recipeCollection.deleteMany({});
-  await recipeCollection.insertMany(seed);
+  await Connection.run('DELETE FROM recipes', []);
+  const sqlInsert = `INSERT INTO recipes (title, shortDescription, preparationTime) VALUES
+        ('Banoffee Pie', 'An English dessert pie made from bananas, cream and caramel.', 25),
+        ('Pizza Margherita', 'Pizza Margherita is a typical Neapolitan pizza, made with tomatoes, mozzarella cheese, fresh basil and olive oil.', 30);`;
+  await Connection.run(sqlInsert, []);
 };
 
 describe('POST to /recipes', () => {
   beforeAll(async () => {
-    await connectToDataSources();
-    recipeCollection = await establishConnection('recipes');
+    await RecipesConnector.establishConnection();
   });
 
   beforeEach(async () => {
@@ -55,18 +36,18 @@ describe('POST to /recipes', () => {
       .expect('Content-Type', /json/);
 
     expect(postResponse.status).toEqual(201);
-    const { _id, ...body } = postResponse.body;
-    expect(body).toEqual(data);
-    expect(_id.length).toEqual(24);
+    const { lastID, changes } = postResponse.body;
+    expect(lastID).toBeGreaterThan(0);
+    expect(changes).toEqual(1);
 
     const getResponse = await request(app)
-      .get(`/recipes/${_id}`)
+      .get(`/recipes/${lastID}`)
       .send()
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
 
     expect(getResponse.status).toEqual(200);
-    expect(getResponse.body).toEqual(postResponse.body);
+    expect(getResponse.body.title).toEqual('Beans on toast');
   });
 
   test('Results can retrieved and the first one deleted', async () => {
@@ -77,18 +58,16 @@ describe('POST to /recipes', () => {
       .expect('Content-Type', /json/);
 
     expect(getResponse.status).toEqual(200);
-    getResponse.body.forEach((obj) => {
-      expect(seed.some((r) => r._id.toString() === obj._id.toString())).toBe(true);
-    });
+    expect(getResponse.body.length).toEqual(2);
 
     const deleteResponse = await request(app)
-      .delete(`/recipes/${getResponse.body[0]._id}`)
+      .delete(`/recipes/${getResponse.body[0].recipe_id}`)
       .send()
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
 
     expect(deleteResponse.status).toEqual(200);
-    expect(deleteResponse.body).toEqual({ deletedCount: 1 });
+    expect(deleteResponse.body.changes).toEqual(1);
 
     const getResponse2 = await request(app)
       .get('/recipes')
@@ -112,18 +91,19 @@ describe('POST to /recipes', () => {
     expect(getResponse.body[0].title).toEqual('Banoffee Pie');
 
     const data = {
+      title: 'Banoffee Pie',
       shortDescription: 'Very tasty.',
       preparationTime: 35,
     };
 
     const patchResponse = await request(app)
-      .patch(`/recipes/${getResponse.body[0]._id}`)
+      .patch(`/recipes/${getResponse.body[0].recipe_id}`)
       .send(data)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
 
     expect(patchResponse.status).toEqual(200);
-    expect(patchResponse.body).toEqual({ modifiedCount: 1 });
+    expect(patchResponse.body.changes).toEqual(1);
 
     const getResponse2 = await request(app)
       .get('/recipes?search=made')
@@ -136,7 +116,6 @@ describe('POST to /recipes', () => {
   });
 
   afterAll(async () => {
-    recipeCollection = null;
-    await client.close();
+    await Connection.db.close();
   });
 });
