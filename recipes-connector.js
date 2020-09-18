@@ -4,7 +4,7 @@ const { BadRequestException } = require('./errors');
 const establishConnection = async () => Connection.connect();
 
 const createRecipe = async (recipe) => {
-  const sql = `INSERT INTO Recipes (title, shortDescription, preparationTime) 
+  const sql = `INSERT INTO Recipes (title, short_description, preparation_time) 
                VALUES ($1, $2, $3)`;
   const values = Object.values(recipe);
   const result = await Connection.run(sql, values);
@@ -20,19 +20,19 @@ const deleteRecipe = async (id) => {
 
 const getRecipes = async (searchTerm) => {
   if (!searchTerm) {
-    return Connection.all(`SELECT recipe_id, title, shortDescription, preparationTime 
+    return Connection.all(`SELECT recipe_id, title, short_description, preparation_time 
                            FROM Recipes`);
   }
-  const sql = `SELECT recipe_id, title, shortDescription, preparationTime 
+  const sql = `SELECT recipe_id, title, short_description, preparation_time 
                FROM Recipes 
                WHERE title LIKE $1
-               OR shortDescription LIKE $2`;
+               OR short_description LIKE $2`;
   const result = await Connection.all(sql, [`%${searchTerm}%`, `%${searchTerm}%`]);
   return result;
 };
 
 const getRecipe = async (id) => {
-  const sql = `SELECT recipe_id, title, shortDescription, preparationTime 
+  const sql = `SELECT recipe_id, title, short_description, preparation_time 
                FROM Recipes 
                WHERE recipe_id = $1`;
   const result = await Connection.get(sql, [id]);
@@ -41,7 +41,7 @@ const getRecipe = async (id) => {
 
 const updateRecipe = async (id, recipe) => {
   const sql = `UPDATE Recipes
-               SET title = $1, shortDescription = $2, preparationTime = $3
+               SET title = $1, short_description = $2, preparation_time = $3
                WHERE recipe_id = $4`;
   const result = await Connection.run(sql, [
     recipe.title,

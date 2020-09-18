@@ -16,13 +16,21 @@ class Connection {
 
     try {
       await Connection.run('DROP TABLE IF EXISTS recipes', []);
-      const sqlCreate = `CREATE TABLE IF NOT EXISTS recipes (
+      await Connection.run('DROP TABLE IF EXISTS recipe_lines', []);
+      const sqlCreateRecipes = `CREATE TABLE IF NOT EXISTS recipes (
         recipe_id INTEGER PRIMARY KEY,
         title VARCHAR(50) NOT NULL,
-        shortDescription VARCHAR(255) NOT NULL,
-        preparationTime INT
+        short_description VARCHAR(255) NOT NULL,
+        preparation_time INT
       );`;
-      await Connection.run(sqlCreate, []);
+      await Connection.run(sqlCreateRecipes, []);
+      // const sqlCreateLines = `CREATE TABLE IF NOT EXISTS recipe_steps (
+      //   recipe_step_id INTEGER PRIMARY KEY,
+      //   stepNumber VARCHAR(50) NOT NULL,
+      //   shortDescription VARCHAR(255) NOT NULL,
+      //   preparationTime INT
+      // );`;
+      // await Connection.run(sqlCreateLines, []);
     } catch (err) {
       console.error(err.message);
     }

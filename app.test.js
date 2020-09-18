@@ -7,7 +7,7 @@ const RecipesConnector = require('./recipes-connector');
 
 const resetDb = async () => {
   await Connection.run('DELETE FROM recipes', []);
-  const sqlInsert = `INSERT INTO recipes (title, shortDescription, preparationTime) VALUES
+  const sqlInsert = `INSERT INTO recipes (title, short_description, preparation_time) VALUES
         ('Banoffee Pie', 'An English dessert pie made from bananas, cream and caramel.', 25),
         ('Pizza Margherita', 'Pizza Margherita is a typical Neapolitan pizza, made with tomatoes, mozzarella cheese, fresh basil and olive oil.', 30);`;
   await Connection.run(sqlInsert, []);
