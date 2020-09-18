@@ -16,7 +16,7 @@ class Connection {
 
     try {
       await Connection.run('DROP TABLE IF EXISTS recipes', []);
-      await Connection.run('DROP TABLE IF EXISTS recipe_lines', []);
+      await Connection.run('DROP TABLE IF EXISTS recipe_steps', []);
       const sqlCreateRecipes = `CREATE TABLE IF NOT EXISTS recipes (
         recipe_id INTEGER PRIMARY KEY,
         title VARCHAR(50) NOT NULL,
@@ -24,13 +24,15 @@ class Connection {
         preparation_time INT
       );`;
       await Connection.run(sqlCreateRecipes, []);
-      // const sqlCreateLines = `CREATE TABLE IF NOT EXISTS recipe_steps (
-      //   recipe_step_id INTEGER PRIMARY KEY,
-      //   stepNumber VARCHAR(50) NOT NULL,
-      //   shortDescription VARCHAR(255) NOT NULL,
-      //   preparationTime INT
-      // );`;
-      // await Connection.run(sqlCreateLines, []);
+      const sqlCreateSteps = `CREATE TABLE IF NOT EXISTS recipe_steps (
+        recipe_step_id INTEGER PRIMARY KEY,
+        recipe_id INTEGER NOT NULL,
+        step_number VARCHAR(50) NOT NULL,
+        step_text VARCHAR(255) NOT NULL,
+        FOREIGN KEY (recipe_id)
+          REFERENCES recipes (recipe_id)
+      );`;
+      await Connection.run(sqlCreateSteps, []);
     } catch (err) {
       console.error(err.message);
     }

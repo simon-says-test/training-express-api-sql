@@ -15,7 +15,7 @@ app.use(logger.logger);
 app.post('/recipes', async (req, res) => {
   const result = await RecipesConnector.createRecipe(req.body);
   // eslint-disable-next-line no-underscore-dangle
-  res.setHeader('Location', `/${result._id}`);
+  res.setHeader('Location', `/${result.recipe_id}`);
   res.status(201);
   res.send(result);
 });
@@ -47,6 +47,10 @@ app.get('/recipes/:id', async (req, res, next) => {
 
 app.put('/recipes/:id', async (req, res) => {
   res.send(await RecipesConnector.updateRecipe(req.params.id, req.body));
+});
+
+app.patch('/recipes/:id/steps', async (req, res) => {
+  res.send(await RecipesConnector.updateRecipeSteps(req.params.id, req.body));
 });
 
 app.get('/', async (req, res) => {

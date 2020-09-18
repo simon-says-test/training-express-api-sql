@@ -25,9 +25,9 @@ describe('POST to /recipes', () => {
   test('A valid recipe results is saved and can be retrieved', async () => {
     const data = {
       title: 'Beans on toast',
-      shortDescription:
+      short_description:
         'Traditional English fare, much beloved of children, students and the lazy.',
-      preparationTime: 5,
+      preparation_time: 5,
     };
     const postResponse = await request(app)
       .post('/recipes')
@@ -92,18 +92,18 @@ describe('POST to /recipes', () => {
 
     const data = {
       title: 'Banoffee Pie',
-      shortDescription: 'Very tasty.',
-      preparationTime: 35,
+      short_description: 'Very tasty.',
+      preparation_time: 35,
     };
 
-    const patchResponse = await request(app)
+    const putResponse = await request(app)
       .put(`/recipes/${getResponse.body[0].recipe_id}`)
       .send(data)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
 
-    expect(patchResponse.status).toEqual(200);
-    expect(patchResponse.body.changes).toEqual(1);
+    expect(putResponse.status).toEqual(200);
+    expect(putResponse.body.changes).toEqual(1);
 
     const getResponse2 = await request(app)
       .get('/recipes?search=made')
