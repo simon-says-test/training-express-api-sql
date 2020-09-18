@@ -45,7 +45,7 @@ app.get('/recipes/:id', async (req, res, next) => {
   }
 });
 
-app.patch('/recipes/:id', async (req, res) => {
+app.put('/recipes/:id', async (req, res) => {
   res.send(await RecipesConnector.updateRecipe(req.params.id, req.body));
 });
 

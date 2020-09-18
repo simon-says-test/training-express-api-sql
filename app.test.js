@@ -97,7 +97,7 @@ describe('POST to /recipes', () => {
     };
 
     const patchResponse = await request(app)
-      .patch(`/recipes/${getResponse.body[0].recipe_id}`)
+      .put(`/recipes/${getResponse.body[0].recipe_id}`)
       .send(data)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);

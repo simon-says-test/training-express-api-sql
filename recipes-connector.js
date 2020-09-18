@@ -6,8 +6,11 @@ const establishConnection = async () => Connection.connect();
 const createRecipe = async (recipe) => {
   const sql = `INSERT INTO Recipes (title, short_description, preparation_time) 
                VALUES ($1, $2, $3)`;
-  const values = Object.values(recipe);
-  const result = await Connection.run(sql, values);
+  const result = await Connection.run(sql, [
+    recipe.title,
+    recipe.shortDescription,
+    recipe.preparationTime,
+  ]);
   return result;
 };
 
