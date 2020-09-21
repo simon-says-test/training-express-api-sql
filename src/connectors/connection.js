@@ -7,13 +7,17 @@ class Connection {
       return this.db;
     }
 
-    const dbName = path.join(__dirname, 'data', 'apptest.db');
+    const dbName = path.join(__dirname, '../../data', 'apptest.db');
     this.db = new sqlite3.Database(dbName, (err) => {
       if (err) {
         console.error(err.message);
       }
     });
 
+    return this.db;
+  }
+
+  static async resetDb() {
     try {
       await Connection.run('DROP TABLE IF EXISTS recipes', []);
       await Connection.run('DROP TABLE IF EXISTS recipe_steps', []);
@@ -36,8 +40,6 @@ class Connection {
     } catch (err) {
       console.error(err.message);
     }
-
-    return this.db;
   }
 
   static async run(sql, params) {

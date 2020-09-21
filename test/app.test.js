@@ -1,9 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 require('dotenv').config();
 const request = require('supertest');
-const { app } = require('./app');
-const { Connection } = require('./connection');
-const RecipesConnector = require('./recipes-connector');
+const { app } = require('../src/app');
+const { Connection } = require('../src/connectors/connection');
 
 const resetDb = async () => {
   await Connection.run('DELETE FROM recipes', []);
@@ -15,7 +14,8 @@ const resetDb = async () => {
 
 describe('POST to /recipes', () => {
   beforeAll(async () => {
-    await RecipesConnector.establishConnection();
+    await Connection.connect();
+    await Connection.resetDb();
   });
 
   beforeEach(async () => {
