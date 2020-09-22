@@ -3,6 +3,7 @@ const winston = require('winston');
 const console = new winston.transports.Console({ level: 'debug' });
 winston.add(console);
 
+// prettier-ignore
 const logger = (req, res, next) => {
   const currentDatetime = new Date();
   const formattedDate = `${currentDatetime.getFullYear()

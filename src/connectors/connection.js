@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const logger = require('../utils/logger');
 
 class Connection {
   static async connect() {
@@ -10,7 +11,7 @@ class Connection {
     const dbName = path.join(__dirname, '../../data', 'apptest.db');
     this.db = new sqlite3.Database(dbName, (err) => {
       if (err) {
-        console.error(err.message);
+        logger.error(err.message);
       }
     });
 
@@ -38,7 +39,7 @@ class Connection {
       );`;
       await Connection.run(sqlCreateSteps, []);
     } catch (err) {
-      console.error(err.message);
+      logger.error(err.message);
     }
   }
 
