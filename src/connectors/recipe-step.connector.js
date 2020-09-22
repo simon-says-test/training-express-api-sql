@@ -20,6 +20,14 @@ const getRecipeSteps = async (recipeId) => {
   return Connection.all(sql, [recipeId]);
 };
 
+const getRecipeStep = async (id) => {
+  const sql = `SELECT recipe_step_id, recipe_id, step_number, step_text 
+               FROM recipe_steps 
+               WHERE recipe_step_id = $1
+               ORDER BY step_number`;
+  return Connection.get(sql, [id]);
+};
+
 const updateRecipeStep = async (id, recipeStep) => {
   const sql = `UPDATE recipe_steps
                SET step_number = $1, step_text = $2
@@ -31,5 +39,6 @@ module.exports = {
   createRecipeStep,
   deleteRecipeStep,
   getRecipeSteps,
+  getRecipeStep,
   updateRecipeStep,
 };

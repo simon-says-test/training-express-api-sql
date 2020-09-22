@@ -1,44 +1,38 @@
 const express = require('express');
-const recipeStepConnector = require('../connectors/recipe-step.connector');
+const recipeStepConnector = require('../controllers/recipe-step.controller');
 const { NotFoundException } = require('../utils/errors');
 
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  const result = await recipeStepConnector.createRecipe(req.body);
-  res.setHeader('Location', `/${result.recipe_id}`);
+  const result = await recipeStepConnector.createRecipeStep(req.body);
+  res.setHeader('Location', `/${result.recipe_step_id}`);
   res.status(201).send(result);
 });
 
 router.delete('/:id', async (req, res) => {
-  const result = await recipeStepConnector.deleteRecipe(req.params.id);
+  const result = await recipeStepConnector.deleteRecipeStep(req.params.id);
   res.status(200).send(result);
 });
 
 router.get('/', async (req, res) => {
-  const searchTerm = req.query.search;
-  const result = await recipeStepConnector.getRecipes(searchTerm);
+  const { recipeId } = req.query;
+  const result = await recipeStepConnector.getRecipeSteps(recipeId);
   res.status(200).send(result);
 });
 
-router.get('/:id', async (req, res, next) => {
-  try {
-    const recipe = await recipeStepConnector.getRecipe(req.params.id);
-    if (!recipe) {
-      throw new NotFoundException('recipe not found');
-    }
-    res.send(recipe);
-  } catch (e) {
-    next(e);
-  }
+router.get('/:id', async (req, res) => {
+  const result = await recipeStepConnector.getRecipeStep(req.params.id);
+  res.status(200).send(result);
 });
 
 router.put('/:id', async (req, res) => {
-  res.send(await recipeStepConnector.updateRecipe(req.params.id, req.body));
+  res.send(await recipeStepConnector.updateRecipeStep(req.params.id, req.body));
 });
 
 router.patch('/:id/steps', async (req, res) => {
-  res.send(await recipeStepConnector.updateRecipeSteps(req.params.id, req.body));
+  const { recipeId } = req.query;
+  res.send(await recipeStepConnector.updateRecipeSteps(recipeId, req.body));
 });
 
 module.exports = router;

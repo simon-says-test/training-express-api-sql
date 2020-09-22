@@ -7,10 +7,12 @@ const deleteRecipeStep = async (id) => recipeStepConnector.deleteRecipeStep(id);
 
 const getRecipeSteps = async (recipeId) => recipeStepConnector.getRecipeSteps(recipeId);
 
+const getRecipeStep = async (id) => recipeStepConnector.getRecipeStep(id);
+
 const updateRecipeStep = async (id, recipeStep) =>
   recipeStepConnector.updateRecipeStep(id, recipeStep);
 
-const updateRecipeStepCollection = async (recipeId, currentSteps) => {
+const updateRecipeSteps = async (recipeId, currentSteps) => {
   const deletedSteps = (await recipeStepConnector.getRecipeSteps(recipeId)).filter(
     (step) => !currentSteps.some((item) => item.recipe_step_id === step.recipe_step_id)
   );
@@ -35,6 +37,7 @@ module.exports = {
   createRecipeStep,
   deleteRecipeStep,
   getRecipeSteps,
+  getRecipeStep,
   updateRecipeStep,
-  updateRecipeStepCollection,
+  updateRecipeStepCollection: updateRecipeSteps,
 };

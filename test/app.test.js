@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 require('dotenv').config();
 const request = require('supertest');
+const winston = require('winston');
 const { app } = require('../src/app');
 const { Connection } = require('../src/connectors/connection');
 
@@ -12,8 +13,9 @@ const resetDb = async () => {
   await Connection.run(sqlInsert, []);
 };
 
-describe('POST to /recipes', () => {
+describe('HTTP requests to /recipes', () => {
   beforeAll(async () => {
+    winston.level = 'warning';
     await Connection.connect();
     await Connection.resetDb();
   });
@@ -50,7 +52,7 @@ describe('POST to /recipes', () => {
     expect(getResponse.body.title).toEqual('Beans on toast');
   });
 
-  test('Results can retrieved and the first one deleted', async () => {
+  test('Recipes can retrieved and deleted', async () => {
     const getResponse = await request(app)
       .get('/recipes')
       .send()
@@ -77,6 +79,7 @@ describe('POST to /recipes', () => {
 
     expect(getResponse2.status).toEqual(200);
     expect(getResponse2.body.length).toEqual(1);
+    expect(getResponse2.body[0].title).toEqual('Pizza Margherita');
   });
 
   test('Results can be retrieved using a search term and then replaced', async () => {
@@ -113,6 +116,22 @@ describe('POST to /recipes', () => {
 
     expect(getResponse2.status).toBe(200);
     expect(getResponse2.body.length).toBe(1);
+  });
+
+  test('Exceptions are reported correctly', async () => {
+    const getResponse = await request(app)
+      .get('/recipe/wrong')
+      .send()
+      .set('Accept', 'application/json');
+
+    expect(getResponse.status).toEqual(404);
+
+    const getResponse2 = await request(app)
+      .get('/recipe-step/wrong')
+      .send()
+      .set('Accept', 'application/json');
+
+    expect(getResponse2.status).toEqual(404);
   });
 
   afterAll(async () => {
