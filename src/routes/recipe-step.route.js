@@ -26,8 +26,12 @@ router.get('/:id', async (req, res) => {
   res.status(200).send(result);
 });
 
-router.put('/:id', async (req, res) => {
-  res.send(await recipeStepConnector.updateRecipeStep(req.params.id, req.body));
+router.put('/:id', async (req, res, next) => {
+  try {
+    res.send(await recipeStepConnector.updateRecipeStep(req.params.id, req.body));
+  } catch (e) {
+    next(e);
+  }
 });
 
 router.patch('/:id/steps', async (req, res) => {

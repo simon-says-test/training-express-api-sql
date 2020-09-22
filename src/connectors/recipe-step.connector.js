@@ -1,9 +1,9 @@
 const { Connection } = require('./connection');
 
 const createRecipeStep = async (recipeStep) => {
-  const sql = `INSERT INTO recipes (step_number, step_text) 
-               VALUES ($1, $2)`;
-  return Connection.run(sql, [recipeStep.step_number, recipeStep.step_text]);
+  const sql = `INSERT INTO recipe_steps (recipe_id, step_number, step_text) 
+               VALUES ($1, $2, $3)`;
+  return Connection.run(sql, [recipeStep.recipe_id, recipeStep.step_number, recipeStep.step_text]);
 };
 
 const deleteRecipeStep = async (id) => {

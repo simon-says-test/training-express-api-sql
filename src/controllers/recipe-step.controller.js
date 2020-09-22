@@ -9,8 +9,12 @@ const getRecipeSteps = async (recipeId) => recipeStepConnector.getRecipeSteps(re
 
 const getRecipeStep = async (id) => recipeStepConnector.getRecipeStep(id);
 
-const updateRecipeStep = async (id, recipeStep) =>
-  recipeStepConnector.updateRecipeStep(id, recipeStep);
+const updateRecipeStep = async (id, recipeStep) => {
+  if (recipeStep.recipe_id && recipeStep.recipe_id !== id) {
+    throw new BadRequestException('Cannot change recipe for recipe step');
+  }
+  return recipeStepConnector.updateRecipeStep(id, recipeStep);
+};
 
 const updateRecipeSteps = async (recipeId, currentSteps) => {
   const deletedSteps = (await recipeStepConnector.getRecipeSteps(recipeId)).filter(
