@@ -25,11 +25,11 @@ getRecipeSteps.mockReturnValue(
 deleteRecipeStep.mockReturnValue(Promise.resolve({ changes: 1 }));
 updateRecipeStep.mockReturnValue(Promise.resolve({ changes: 2 }));
 createRecipeStep.mockReturnValue(Promise.resolve({ changes: 4 }));
-const { updateRecipeStepCollection } = require('./recipe-step.controller');
+const { updateRecipeSteps } = require('./recipe-step.controller');
 
 describe('update recipe steps collection', () => {
   test('The correct number of changes is returned', async () => {
-    const result = await updateRecipeStepCollection(1, [
+    const result = await updateRecipeSteps(1, [
       {
         recipe_step_id: 11,
         recipe_id: 1,

@@ -5,7 +5,7 @@ const { CustomException } = require('../utils/errors');
 const router = express.Router({ mergeParams: true });
 
 router.post('/', async (req, res) => {
-  const result = await recipeStepController.createRecipeStep(req.body);
+  const result = await recipeStepController.createRecipeStep(req.params.recipeId, req.body);
   res.setHeader('Location', `/${result.recipe_step_id}`);
   res.status(201).send(result);
 });
