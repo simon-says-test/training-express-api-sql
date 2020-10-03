@@ -4,8 +4,8 @@
   "description": "A simple API for training purposes",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./start.js",
-    "start:prod": "nodemon ./start.js",
+    "start": "nodemon --ignore data/ ./start.js",
+    "start:prod": "nodemon --ignore data/ ./start.js",
     "test": "jest --verbose --coverage"
   },
   "author": "Simon Thomas",

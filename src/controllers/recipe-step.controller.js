@@ -1,7 +1,8 @@
 const recipeStepConnector = require('../connectors/recipe-step.connector');
 const { BadRequestException } = require('../utils/errors');
 
-const createRecipeStep = async (recipeStep) => recipeStepConnector.createRecipeStep(recipeStep);
+const createRecipeStep = async (recipeId, recipeStep) =>
+  recipeStepConnector.createRecipeStep({ recipe_id: recipeId, ...recipeStep });
 
 const deleteRecipeStep = async (id) => recipeStepConnector.deleteRecipeStep(id);
 
@@ -29,7 +30,7 @@ const updateRecipeSteps = async (recipeId, currentSteps) => {
     if (step.recipe_step_id) {
       promises.push(recipeStepConnector.updateRecipeStep(step.recipe_step_id, step));
     } else {
-      promises.push(recipeStepConnector.createRecipeStep(step));
+      promises.push(createRecipeStep(recipeId, step));
     }
   });
 
@@ -43,5 +44,5 @@ module.exports = {
   getRecipeSteps,
   getRecipeStep,
   updateRecipeStep,
-  updateRecipeStepCollection: updateRecipeSteps,
+  updateRecipeSteps,
 };

@@ -4,7 +4,7 @@ const { CustomException } = require('./errors');
 // eslint-disable-next-line no-unused-vars
 const handler = (err, req, res, next) => {
   if (err instanceof CustomException) {
-    const log = `Error ${err.code}: ${err.message}`;
+    const log = `Error ${err.code}: ${err.message} - ${err.metadata ? err.metadata : ''}`;
     winston.error(log);
     return res.status(err.code).json({
       status: 'error',

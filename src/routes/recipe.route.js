@@ -1,13 +1,18 @@
 const express = require('express');
+const recipeStepsRouter = require('./recipe-step.route');
 const recipeController = require('../controllers/recipe.controller');
-const { NotFoundException } = require('../utils/errors');
+const { CustomException, NotFoundException } = require('../utils/errors');
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
-  const result = await recipeController.createRecipe(req.body);
-  res.setHeader('Location', `/${result.recipe_id}`);
-  res.status(201).send(result);
+router.post('/', async (req, res, next) => {
+  try {
+    const result = await recipeController.createRecipe(req.body);
+    res.setHeader('Location', `/${result.recipe_id}`);
+    res.status(201).send(result);
+  } catch (err) {
+    next(new CustomException('Unable to create recipe', err));
+  }
 });
 
 router.delete('/:id', async (req, res) => {
@@ -36,5 +41,7 @@ router.get('/:id', async (req, res, next) => {
 router.put('/:id', async (req, res) => {
   res.send(await recipeController.updateRecipe(req.params.id, req.body));
 });
+
+router.use('/:recipeId/recipe-steps', recipeStepsRouter);
 
 module.exports = router;

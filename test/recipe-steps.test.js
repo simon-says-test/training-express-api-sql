@@ -37,7 +37,7 @@ describe('HTTP requests to /recipe-steps', () => {
       step_text: 'Chop bananas.',
     };
     const postResponse = await request(app)
-      .post('/recipe-steps')
+      .post('/recipes/1/recipe-steps')
       .send(data)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
@@ -48,7 +48,7 @@ describe('HTTP requests to /recipe-steps', () => {
     expect(changes).toEqual(1);
 
     const getResponse = await request(app)
-      .get(`/recipe-steps/${lastID}`)
+      .get(`/recipes/1/recipe-steps/${lastID}/`)
       .send()
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
@@ -62,7 +62,7 @@ describe('HTTP requests to /recipe-steps', () => {
     };
 
     const putResponse = await request(app)
-      .put(`/recipe-steps/${getResponse.body.recipe_step_id}`)
+      .put(`/recipes/1/recipe-steps/${getResponse.body.recipe_step_id}`)
       .send(newData)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
@@ -71,7 +71,7 @@ describe('HTTP requests to /recipe-steps', () => {
     expect(putResponse.body.changes).toEqual(1);
 
     const getResponse2 = await request(app)
-      .get(`/recipe-steps/${getResponse.body.recipe_step_id}`)
+      .get(`/recipes/1/recipe-steps/${getResponse.body.recipe_step_id}`)
       .send()
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
@@ -82,7 +82,7 @@ describe('HTTP requests to /recipe-steps', () => {
 
   test('Recipe steps for a recipe can retrieved and deleted', async () => {
     const getResponse = await request(app)
-      .get('/recipe-steps?recipeId=1')
+      .get(`/recipes/1/recipe-steps`)
       .send()
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
@@ -91,7 +91,7 @@ describe('HTTP requests to /recipe-steps', () => {
     expect(getResponse.body.length).toEqual(2);
 
     const deleteResponse = await request(app)
-      .delete(`/recipe-steps/${getResponse.body[0].recipe_step_id}`)
+      .delete(`/recipes/1/recipe-steps/${getResponse.body[0].recipe_step_id}`)
       .send()
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
@@ -100,7 +100,7 @@ describe('HTTP requests to /recipe-steps', () => {
     expect(deleteResponse.body.changes).toEqual(1);
 
     const getResponse2 = await request(app)
-      .get('/recipe-steps?recipeId=1')
+      .get('/recipes/1/recipe-steps')
       .send()
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
@@ -118,7 +118,7 @@ describe('HTTP requests to /recipe-steps', () => {
     };
 
     const putResponse = await request(app)
-      .put(`/recipe-steps/1`)
+      .put(`/recipes/1/recipe-steps/1`)
       .send(newData)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/);
@@ -126,7 +126,7 @@ describe('HTTP requests to /recipe-steps', () => {
     expect(putResponse.status).toEqual(400);
 
     const getResponse2 = await request(app)
-      .get('/recipe-step/wrong')
+      .get('/recipes/1/recipe-step/wrong')
       .send()
       .set('Accept', 'application/json');
 

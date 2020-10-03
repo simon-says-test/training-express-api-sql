@@ -4,7 +4,6 @@ const express = require('express');
 const winston = require('winston');
 const logger = require('./utils/logger');
 const recipeRouter = require('./routes/recipe.route');
-const recipeStepsRouter = require('./routes/recipe-step.route');
 const errorHandler = require('./utils/error-handler');
 const { Connection } = require('./connectors/connection');
 
@@ -20,7 +19,6 @@ app.use(express.urlencoded({ extended: true })); // support URL-encoded bodies
 app.use(logger.logger);
 
 app.use('/recipes', recipeRouter);
-app.use('/recipe-steps', recipeStepsRouter);
 
 app.use(logger.logger);
 app.use(errorHandler.handler);
