@@ -4,20 +4,19 @@
 
 <!-- PROJECT SHIELDS -->
 
-[![Contributors][contributors-shield]][https://github.com/simon-says-test/training-express-api-sql/graphs/contributors]
-[![Forks][forks-shield]][https://github.com/simon-says-test/training-express-api-sql/network/members]
-[![Stargazers][stars-shield]][https://github.com/simon-says-test/training-express-api-sql/stargazers]
-[![Issues][issues-shield]][https://github.com/simon-says-test/training-express-api-sql/issues]
-[![MIT License][license-shield]][https://github.com/simon-says-test/training-express-api-sql/blob/master/license.txt]
-[![LinkedIn][linkedin-shield]][https://linkedin.com/in/simon-thomas-5a521651]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
-<!-- PROJECT LOGO -->
+<!-- PROJECT LOGO
 <br />
 <p align="center">
   <a href="https://github.com/simon-says-test/training-express-api-sql">
     <img src="https://nodejs.org/static/images/logos/nodejs-new-pantone-black.ai" alt="Logo" width="122" height="75">
   </a>
-
+-->
   <h3 align="center">Training-Express-API-SQL</h3>
 
   <p align="center">
@@ -156,5 +155,4 @@ Project Link: [https://github.com/simon-says-test/training-express-api-sql](http
 [license-shield]: https://img.shields.io/github/license/simon-says-test/training-express-api-sql
 [license-url]: https://github.com/simon-says-test/repo/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/simon-says-test
-[product-screenshot]: images/screenshot.png
+[linkedin-url]: https://linkedin.com/in/simon-thomas-5a521651
