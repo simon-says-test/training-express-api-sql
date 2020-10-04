@@ -33,7 +33,8 @@
 
 ## Table of Contents
 
-- [About the Project](#about-the-project)
+- [Table of Contents](#table-of-contents)
+- [About The Project](#about-the-project)
   - [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -146,15 +147,13 @@ Project Link: [https://github.com/simon-says-test/training-express-api-sql](http
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/simon-says-test/repo.svg?style=flat-square
-[contributors-url]: https://github.com/simon-says-test/repo/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/simon-says-test/repo.svg?style=flat-square
-[forks-url]: https://github.com/simon-says-test/repo/network/members
-[stars-shield]: https://img.shields.io/github/stars/simon-says-test/repo.svg?style=flat-square
+[forks-shield]: https://img.shields.io/github/forks/simon-says-test/training-express-api-sql?label=forks
+[forks-url]: https://github.com/simon-says-test/training-express-api-sql/network/members
+[stars-shield]: https://img.shields.io/github/stars/simon-says-test/training-express-api-sql
 [stars-url]: https://github.com/simon-says-test/repo/stargazers
-[issues-shield]: https://img.shields.io/github/issues/simon-says-test/repo.svg?style=flat-square
+[issues-shield]: https://img.shields.io/github/issues/simon-says-test/training-express-api-sql
 [issues-url]: https://github.com/simon-says-test/repo/issues
-[license-shield]: https://img.shields.io/github/license/simon-says-test/repo.svg?style=flat-square
+[license-shield]: https://img.shields.io/github/license/simon-says-test/training-express-api-sql
 [license-url]: https://github.com/simon-says-test/repo/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/simon-says-test
