@@ -53,6 +53,8 @@ A simple API allowing basic CRUD operations on recipe data stored in an SQLite b
 
 This project is purely for us as a training aid and by no means represents best practice for a production application.
 
+There are a number of outstanding issues, mostly to be left outstanding as an exercise for trainees.
+
 ### Built With
 
 - [Node](https://nodejs.org/)
@@ -111,13 +113,13 @@ npm test
 
 ## Roadmap
 
-See the [open issues](https://github.com/simon-says-test/training-express-api-sql/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/simon-says-test/training-express-api-sql/issues) for a list of proposed features (and known issues). It is expected that most, if not all, of these should be left open and not fixed on the master branch in order that they remian as an exercise for people using this repository as part of training.
 
 <!-- CONTRIBUTING -->
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Please note, however, that this repository is purely for training purposes and most issues, tracked or otherwise, are probably not in desperate need of fixing, except as an exercise for those being trained. If there's something you still think would be really useful, then please follow the usual steps:
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -141,7 +143,7 @@ Project Link: [https://github.com/simon-says-test/training-express-api-sql](http
 
 ## Acknowledgements
 
-- [Warren Jones]()
+- [Stack Overflow](https://stackoverflow.com)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

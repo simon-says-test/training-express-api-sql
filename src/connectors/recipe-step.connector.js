@@ -1,3 +1,5 @@
+// This module enables retrieval and persistence of data via parametrised queries to the database
+
 const { Connection } = require('./connection');
 
 const createRecipeStep = async (recipeStep) => {

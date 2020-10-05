@@ -1,23 +1,28 @@
+// This module enables connection to an SQLite database, providing wrappers to allow
+// async/await syntax and an easy method of resetting the database.
+
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const winston = require('winston');
 
 class Connection {
   static async connect() {
-    if (this.db) {
-      return this.db;
+    if (Connection.db) {
+      return Connection.db;
     }
 
     const dbName = path.join(__dirname, '../../data', 'apptest.db');
-    this.db = new sqlite3.Database(dbName, (err) => {
+    Connection.db = new sqlite3.Database(dbName, (err) => {
       if (err) {
         winston.error(err.message);
       }
     });
 
-    return this.db;
+    return Connection.db;
   }
 
+  // Deletes and recreates all tables for convenience
+  // You would not do this in a production application since you usually want to keep your data!
   static async resetDb() {
     try {
       await Connection.run('DROP TABLE IF EXISTS recipes', []);
@@ -40,9 +45,11 @@ class Connection {
       await Connection.run(sqlCreateSteps, []);
     } catch (err) {
       winston.error(err.message);
+      throw err;
     }
   }
 
+  // Wrapper for sqlite3 run method to allow async/await
   static async run(sql, params) {
     return new Promise((resolve, reject) => {
       Connection.db.run(sql, params, function complete(error) {
@@ -55,6 +62,7 @@ class Connection {
     });
   }
 
+  // Wrapper for sqlite3 all method to allow async/await
   static async all(sql, params) {
     return new Promise((resolve, reject) => {
       Connection.db.all(sql, params, function complete(error, rows) {
@@ -67,6 +75,7 @@ class Connection {
     });
   }
 
+  // Wrapper for sqlite3 get method to allow async/await
   static async get(sql, params) {
     return new Promise((resolve, reject) => {
       Connection.db.get(sql, params, function complete(error, row) {

@@ -1,5 +1,5 @@
+// This module enables retrieval and persistence of data via parametrised queries to the database
 const { Connection } = require('./connection');
-const { BadRequestException } = require('../utils/errors');
 
 const createRecipe = async (recipe) => {
   const sql = `INSERT INTO recipes (title, short_description, preparation_time) 
