@@ -151,10 +151,10 @@ Project Link: [https://github.com/simon-says-test/training-express-api-sql](http
 [forks-shield]: https://img.shields.io/github/forks/simon-says-test/training-express-api-sql?label=forks
 [forks-url]: https://github.com/simon-says-test/training-express-api-sql/network/members
 [stars-shield]: https://img.shields.io/github/stars/simon-says-test/training-express-api-sql
-[stars-url]: https://github.com/simon-says-test/repo/stargazers
+[stars-url]: https://github.com/simon-says-test/training-express-api-sql/stargazers
 [issues-shield]: https://img.shields.io/github/issues/simon-says-test/training-express-api-sql
-[issues-url]: https://github.com/simon-says-test/repo/issues
+[issues-url]: https://github.com/simon-says-test/training-express-api-sql/issues
 [license-shield]: https://img.shields.io/github/license/simon-says-test/training-express-api-sql
-[license-url]: https://github.com/simon-says-test/repo/blob/master/LICENSE.txt
+[license-url]: https://github.com/simon-says-test/training-express-api-sql/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/simon-thomas-5a521651
